@@ -1,7 +1,7 @@
 name: CI Pipeline
 
 on:
-  push: # Déclenche le workflow sur le push de TOUTES les branches
+  push:
   pull_request:
     branches: [ main ]
 
@@ -12,21 +12,27 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]  # Ajuste si besoin (16.x, 20.x, etc.)
+        node-version: [18.x]
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build the project (TypeScript)
+      - name: Build the project
         run: npm run build
 
       - name: Run Jest tests
