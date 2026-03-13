@@ -1,0 +1,1 @@
+Pour rester aligné avec le périmètre du test et le temps imparti, je n’ai pas implémenté de système d’authentification ni d'utilisateurs. Les actions d’administration sont considérées comme accessibles dans cette version de démonstration.
