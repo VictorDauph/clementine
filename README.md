@@ -31,6 +31,6 @@ Un test auto, intégré à un workflow github ci Fonctionnel a été ajouté sur
 pour le lancer: 
 
 ---
-cd backend 
+cd backend  
 npm test
 ---
