@@ -19,7 +19,8 @@ COPY . .
 
 
 #Cmd est une instruction lancée à l'instanciation du conteneur.
-# Commande à exécuter au démarrage du conteneur
+# Commande à exécuter au démarrage du conteneur, pour l'environnement de prod 
+#l'environnement de dev est lancé via docker-compose.yml, qui utilise nodemon pour le rechargement à chaud
 CMD ["npm","run", "prod"]
 
 

@@ -6,13 +6,27 @@ services:
       - "3000:3000"
       - "9229:9229"
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       - postgres
     volumes:
       - ./backend/src:/app/src
       - /app/node_modules # Empêche le partage des node_modules entre hôte et conteneur
     command: npm run start
+
+  frontend:
+    build: ./frontend
+    container_name: projet_clementine_front
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host
 
   postgres:
     image: postgres:latest
