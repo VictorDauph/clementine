@@ -9,6 +9,31 @@ import Match from "../models/Match.model";
 import { TournamentRankingDto, tournamentRankingSchema } from "../dto/TournamentRanking.dto";
 
 
+export async function getAllTournaments(req: Request, res: Response) {
+    try {
+        const tournaments = await Tournament.findAll();
+        res.status(200).json(tournaments);
+    } catch (err: any) {
+        console.error("Erreur lors de la récupération des tournois :", err);
+        res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
+    }
+}
+
+export async function getTournamentById(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const tournament = await Tournament.findByPk(id);
+        if (!tournament) {
+            res.status(404).json({ message: "Tournoi non trouvé" });
+            return;
+        }
+        res.status(200).json(tournament);
+    } catch (err: any) {
+        console.error("Erreur lors de la récupération du tournoi :", err);
+        res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
+    }
+}
+
 export async function createTournament(req: Request, res: Response) {
     try {
         // Validation avec JOI

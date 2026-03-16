@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+button {
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.card {
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.splash-image {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    transform: scale(1);
+    opacity: 1;
+
+    transition:
+        transform 3s ease,
+        opacity 2s ease;
+}
+
+.splash-image-shrink {
+    transform: scale(0);
+    opacity: 0;
+}
