@@ -12,6 +12,8 @@ services:
     volumes:
       - ./backend/src:/app/src
       - /app/node_modules # Empêche le partage des node_modules entre hôte et conteneur
+    #permet d'attacher un debugger à nodemon
+    #command: nodemon --exec "node --inspect=0.0.0.0:9229 -r ts-node/register" src/index.ts 
     command: npm run start
 
   frontend:

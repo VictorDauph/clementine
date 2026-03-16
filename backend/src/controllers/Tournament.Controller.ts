@@ -3,10 +3,10 @@ import Tournament from "../models/Tournament.model";
 import { TournamentCreationDto, tournamentCreationSchema } from "../dto/TournamentCreation.dto";
 import { TeamRegistrationDto, teamRegistrationSchema } from "../dto/TeamRegistration.dto";
 import Team from "../models/Team.model";
-import TournamentTeams from "../models/TournamentTeams.model";
 import { GenerateMatchesDto, generateMatchesSchema } from "../dto/GenerateMatches.dto";
 import Match from "../models/Match.model";
 import { TournamentRankingDto, tournamentRankingSchema } from "../dto/TournamentRanking.dto";
+import { TournamentByIdResponseDto } from "../dto/TournamentByIdResponse.dto";
 
 
 export async function getAllTournaments(req: Request, res: Response) {
@@ -22,12 +22,20 @@ export async function getAllTournaments(req: Request, res: Response) {
 export async function getTournamentById(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const tournament = await Tournament.findByPk(id);
+        const tournament: Tournament | null = await Tournament.findByPk(id, { include: [{ model: Team, as: "teams" }] });
         if (!tournament) {
             res.status(404).json({ message: "Tournoi non trouvé" });
             return;
         }
-        res.status(200).json(tournament);
+
+        const tournamentData: TournamentByIdResponseDto = {
+            id: tournament.id,
+            name: tournament.name,
+            date: tournament.date,
+            teams: tournament.teams || []
+        }
+
+        res.status(200).json(tournamentData);
     } catch (err: any) {
         console.error("Erreur lors de la récupération du tournoi :", err);
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
@@ -64,6 +72,7 @@ export async function createTournament(req: Request, res: Response) {
     }
 }
 
+
 export async function registerTeamToTournament(req: Request, res: Response) {
     try {
         // Validation du body avec JOI
@@ -98,6 +107,7 @@ export async function registerTeamToTournament(req: Request, res: Response) {
             return;
         }
 
+        /*
         // Vérifier que l'équipe n'est pas déjà inscrite
         const existing = await TournamentTeams.findOne({
             where: { tournamentId, teamId },
@@ -106,6 +116,7 @@ export async function registerTeamToTournament(req: Request, res: Response) {
             res.status(409).json({ message: "Équipe déjà inscrite à ce tournoi" });
             return;
         }
+            
 
         // Inscrire l'équipe au tournoi via la table de jointure
         await TournamentTeams.create({
@@ -118,12 +129,14 @@ export async function registerTeamToTournament(req: Request, res: Response) {
             tournamentId,
             teamId,
         });
+        */
     } catch (err: any) {
         console.error("Erreur lors de l'inscription de l'équipe :", err);
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
     }
 }
 
+/*
 export async function generateMatches(req: Request, res: Response) {
     try {
         // Validation du body avec JOI
@@ -151,6 +164,7 @@ export async function generateMatches(req: Request, res: Response) {
             return;
         }
 
+        
         // Récupérer les équipes inscrites au tournoi
         const tournamentTeams = await TournamentTeams.findAll({
             where: { tournamentId },
@@ -158,6 +172,7 @@ export async function generateMatches(req: Request, res: Response) {
         });
 
         const teams = tournamentTeams.map(tt => tt.teamId);
+        
 
         if (teams.length < 2) {
             res.status(400).json({ message: "Au moins 2 équipes sont nécessaires pour générer des matchs" });
@@ -217,12 +232,13 @@ export async function getTournamentRanking(req: Request, res: Response) {
             return;
         }
 
+        
         // Récupérer les équipes inscrites
         const tournamentTeams = await TournamentTeams.findAll({
             where: { tournamentId: parseInt(tournamentId) },
             include: [Team],
         });
-
+        
         // Récupérer les matchs joués
         const matches = await Match.findAll({
             where: { tournamentId: parseInt(tournamentId), playedAt: { [require('sequelize').Op.ne]: null } },
@@ -231,6 +247,7 @@ export async function getTournamentRanking(req: Request, res: Response) {
         // Calculer les stats pour chaque équipe
         const teamStats: { [key: number]: { team: Team, wins: number, draws: number, losses: number, points: number, goalsFor: number, goalsAgainst: number } } = {};
 
+        
         tournamentTeams.forEach(tt => {
             teamStats[tt.teamId] = {
                 team: (tt as any).Team,
@@ -242,7 +259,7 @@ export async function getTournamentRanking(req: Request, res: Response) {
                 goalsAgainst: 0,
             };
         });
-
+        
         matches.forEach(match => {
             const teamA = teamStats[match.teamAId];
             const teamB = teamStats[match.teamBId];
@@ -297,4 +314,4 @@ export async function getTournamentRanking(req: Request, res: Response) {
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
     }
 }
-
+*/

@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
+import Team from "./Team.model";
 
 // Définition des attributs d'un tournoi
 interface TournamentAttributes {
@@ -15,6 +16,7 @@ class Tournament extends Model<TournamentAttributes> implements TournamentAttrib
     public name!: string;
     public date!: Date;
     public generated!: boolean;
+    public teams?: Team[];
 
     public readonly createdAt!: Date;
 }

@@ -35,17 +35,18 @@ Team.init(
     }
 );
 
-
-// Relation many-to-many (table de jointure créée automatiquement par Sequelize)
 Tournament.belongsToMany(Team, {
-    through: "TournamentTeams",
+    through: "tournament_teams",
     foreignKey: "tournamentId",
     otherKey: "teamId",
+    as: "teams",
 });
+
 Team.belongsToMany(Tournament, {
-    through: "TournamentTeams",
+    through: "tournament_teams",
     foreignKey: "teamId",
     otherKey: "tournamentId",
+    as: "tournaments",
 });
 
 export default Team;
