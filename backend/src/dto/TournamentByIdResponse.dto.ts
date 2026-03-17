@@ -1,3 +1,4 @@
+import { Match } from "../models/syncModels";
 import Team from "../models/Team.model";
 
 export interface TournamentByIdResponseDto {
@@ -5,4 +6,5 @@ export interface TournamentByIdResponseDto {
     name: string;
     date: Date;
     teams: Team[];
+    matches: Match[];
 }

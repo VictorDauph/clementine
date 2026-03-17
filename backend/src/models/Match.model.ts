@@ -78,7 +78,7 @@ Match.init(
 
 // Associations
 Match.belongsTo(Tournament, { foreignKey: "tournamentId" });
-Tournament.hasMany(Match, { foreignKey: "tournamentId" });
+Tournament.hasMany(Match, { foreignKey: "tournamentId", as: "matches" });
 
 Match.belongsTo(Team, { as: "teamA", foreignKey: "teamAId" });
 Match.belongsTo(Team, { as: "teamB", foreignKey: "teamBId" });

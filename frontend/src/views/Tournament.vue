@@ -2,21 +2,75 @@
 import { onMounted, ref } from "vue"
 import { useRoute } from "vue-router";
 import type { Tournament } from "@/models/Tournament";
-import {getTournamentById} from "@/services/tournament.service";
+import {addTeamToTournament, generateMatchesService, getTournamentById} from "@/services/tournament.service";
+import Modal from "@/components/Modal.vue";
+import TeamForm from "@/components/TeamForm.vue";
+import type { TeamRegistrationPayload } from "@/models/Team";
 
 const tournament = ref<Tournament | null>(null)
 const route = useRoute()
 const tournamentId = route.params.id as string
+const modalOpen = ref(false)
+const errorMessage = ref("")
 
 onMounted(() => {
     if (tournamentId) {
         getTournamentById(+tournamentId).then((t) => {
             tournament.value = t;
+            console.log("Tournoi chargé:", t);
         }).catch((error) => {
             console.error("Erreur lors du chargement du tournoi:", error);
         });
     }
 })
+
+function openModal() {
+  modalOpen.value = true
+}
+
+function closeModal() {
+  modalOpen.value = false
+}
+
+function submitTeam(data: { name: string }) {
+  console.log("Ajouter équipe:", data)
+  const teamPayload: TeamRegistrationPayload = {
+    tournamentId: +tournamentId,
+    teamName: data.name
+  }
+  addTeamToTournament(teamPayload)
+    .then(() => {
+      // Recharger les données du tournoi pour afficher la nouvelle équipe
+      return getTournamentById(+tournamentId);
+    })
+    .then((updatedTournament) => {
+      tournament.value = updatedTournament;
+    })
+    .catch((error) => {
+      console.error("Erreur lors de l'ajout de l'équipe:", error);
+      errorMessage.value = "Impossible d'ajouter l'équipe.";
+    });
+  closeModal()
+}
+
+function generateMatches() {
+  console.log("Générer les matchs pour le tournoi", tournament.value?.id)
+  generateMatchesService(+tournamentId)
+    .then(() => {
+      // Recharger les données du tournoi pour afficher les matchs générés
+      return getTournamentById(+tournamentId);
+    })
+    .then((updatedTournament) => {
+      tournament.value = updatedTournament;
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la génération des matchs:", error);
+      errorMessage.value = "Impossible de générer les matchs.";
+    });
+
+}
+
+
 </script>
 
 
@@ -26,7 +80,7 @@ onMounted(() => {
     <header class="page-header">
       <h1>{{ tournament.name || "Tournoi" }}</h1>
       <p class="subtitle">
-        {{ tournament.date || "Date à définir" }}
+        {{ new Date(tournament.date).toLocaleDateString('fr-FR') || "Date à définir" }}
       </p>
     </header>
 
@@ -37,17 +91,17 @@ onMounted(() => {
       <section class="section">
         <div class="section-header">
           <h2>Équipes</h2>
-          <button class="primary-button">
+          <button class="primary-button" @click="openModal">
             Ajouter une équipe
           </button>
         </div>
 
-        <div v-if="teams.length === 0" class="empty">
+        <div v-if="tournament.teams?.length === 0" class="empty">
           Aucune équipe enregistrée
         </div>
 
         <ul class="team-list">
-          <li v-for="team in teams" :key="team.id">
+          <li v-for="team in tournament.teams" :key="team.id">
             {{ team.name }}
           </li>
         </ul>
@@ -67,19 +121,25 @@ onMounted(() => {
           </button>
         </div>
 
-        <div v-if="matches.length === 0" class="empty">
+        <div v-if="tournament.matches?.length === 0" class="empty">
           Aucun match généré
         </div>
 
         <div class="match-list">
           <div
-            v-for="match in matches"
+            v-for="match in tournament.matches"
             :key="match.id"
             class="match-card"
           >
-            <span>{{ match.teamA }}</span>
+            <span>{{ tournament.teams.find((t) => t.id === match.teamAId)?.name }}</span> 
+            <span v-if="match.scoreA === -1 && match.scoreB === -1">
+              {{ match.scoreA }}
+            </span>
             <strong>vs</strong>
-            <span>{{ match.teamB }}</span>
+            <span v-if="match.scoreA === -1 && match.scoreB === -1">
+              {{ match.scoreB }}
+            </span>
+            <span>{{ tournament.teams.find((t) => t.id === match.teamBId)?.name }}</span>
           </div>
         </div>
       </section>
@@ -93,6 +153,14 @@ onMounted(() => {
           Classement disponible après les matchs
         </div>
       </section>
+
+      <Modal :isOpen="modalOpen" @close="closeModal">
+        <TeamForm @submit="submitTeam" />
+      </Modal>
+
+      <p v-if="errorMessage" class="error">
+        {{ errorMessage }}
+      </p>
 
     </main>
   </div>

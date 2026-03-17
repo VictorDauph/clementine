@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 import Team from "./Team.model";
+import Match from "./Match.model";
 
 // Définition des attributs d'un tournoi
 interface TournamentAttributes {
@@ -17,8 +18,11 @@ class Tournament extends Model<TournamentAttributes> implements TournamentAttrib
     public date!: Date;
     public generated!: boolean;
     public teams?: Team[];
-
+    public matches?: Match[];
     public readonly createdAt!: Date;
+
+    public addTeam!: (team: Team) => Promise<void>;
+    public getTeams!: () => Promise<Team[]>;
 }
 
 Tournament.init(
