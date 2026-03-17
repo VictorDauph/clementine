@@ -132,12 +132,12 @@ function generateMatches() {
             class="match-card"
           >
             <span>{{ tournament.teams.find((t) => t.id === match.teamAId)?.name }}</span> 
-            <span v-if="match.scoreA === -1 && match.scoreB === -1">
-              {{ match.scoreA }}
+            <span v-if="match.scoreA! >= 0 && match.scoreB! >= 0">
+             | {{ match.scoreA }} |
             </span>
             <strong>vs</strong>
-            <span v-if="match.scoreA === -1 && match.scoreB === -1">
-              {{ match.scoreB }}
+            <span v-if="match.scoreA! >= 0 && match.scoreB! >= 0">
+             | {{ match.scoreB }} |
             </span>
             <span>{{ tournament.teams.find((t) => t.id === match.teamBId)?.name }}</span>
           </div>
