@@ -7,14 +7,5 @@ export interface Tournament {
     date: string;
     teams: Team[];
     matches: Match[];
-}
-
-export interface CreateTournamentPayload {
-    name: string;
-    date: string;
-}
-
-export interface CreateTournamentResponse {
-    message: string;
-    tournament: Tournament;
+    generated: boolean;
 }

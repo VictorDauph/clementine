@@ -1,5 +1,5 @@
 import express from "express";
-import { createTournament, registerTeamToTournament, getAllTournaments, getTournamentById, generateMatches } from "../controllers/Tournament.Controller";
+import { createTournament, registerTeamToTournament, getAllTournaments, getTournamentById, generateMatches, getTournamentRanking } from "../controllers/Tournament.Controller";
 
 const router = express.Router();
 
@@ -15,12 +15,11 @@ router.post("/register-team", registerTeamToTournament);
 // Route pour générer les matchs d'un tournoi
 router.post("/generate-matches", generateMatches);
 
-// Route pour récupérer un tournoi par son ID
-router.get("/:id", getTournamentById);
-
-/*
 // Route pour obtenir le classement d'un tournoi
-router.get("/:tournamentId/ranking", getTournamentRanking);
-*/
+router.get("/ranking/:tournamentId", getTournamentRanking);
+
+// Route pour récupérer un tournoi par son ID
+router.get("/by-id/:tournamentId", getTournamentById);
+
 
 export default router;

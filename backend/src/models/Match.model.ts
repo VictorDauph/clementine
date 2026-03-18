@@ -8,8 +8,8 @@ interface MatchAttributes {
     tournamentId: number;
     teamAId: number;
     teamBId: number;
-    scoreA?: number;
-    scoreB?: number;
+    scoreA: number;
+    scoreB: number;
     playedAt?: Date;
 }
 
@@ -57,12 +57,12 @@ Match.init(
         scoreA: {
             type: DataTypes.INTEGER,
             allowNull: true,
-            defaultValue: 0,
+            defaultValue: -1,
         },
         scoreB: {
             type: DataTypes.INTEGER,
             allowNull: true,
-            defaultValue: 0,
+            defaultValue: -1,
         },
         playedAt: {
             type: DataTypes.DATE,

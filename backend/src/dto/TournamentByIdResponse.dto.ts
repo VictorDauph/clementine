@@ -7,4 +7,5 @@ export interface TournamentByIdResponseDto {
     date: Date;
     teams: Team[];
     matches: Match[];
+    generated: boolean;
 }

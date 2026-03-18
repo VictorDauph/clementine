@@ -5,7 +5,6 @@ import { TeamRegistrationDto, teamRegistrationSchema } from "../dto/TeamRegistra
 import Team from "../models/Team.model";
 import { GenerateMatchesDto, generateMatchesSchema } from "../dto/GenerateMatches.dto";
 import Match from "../models/Match.model";
-import { TournamentRankingDto, tournamentRankingSchema } from "../dto/TournamentRanking.dto";
 import { TournamentByIdResponseDto } from "../dto/TournamentByIdResponse.dto";
 
 
@@ -21,8 +20,8 @@ export async function getAllTournaments(req: Request, res: Response) {
 
 export async function getTournamentById(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const tournament: Tournament | null = await Tournament.findByPk(id, { include: [{ model: Team, as: "teams" }, { model: Match, as: "matches" }] });
+        const { tournamentId } = req.params;
+        const tournament: Tournament | null = await Tournament.findByPk(tournamentId, { include: [{ model: Team, as: "teams" }, { model: Match, as: "matches" }] });
         if (!tournament) {
             res.status(404).json({ message: "Tournoi non trouvé" });
             return;
@@ -33,7 +32,8 @@ export async function getTournamentById(req: Request, res: Response) {
             name: tournament.name,
             date: tournament.date,
             teams: tournament.teams || [],
-            matches: tournament.matches || []
+            matches: tournament.matches || [],
+            generated: tournament.generated
         }
 
         res.status(200).json(tournamentData);
@@ -190,20 +190,10 @@ export async function generateMatches(req: Request, res: Response) {
     }
 }
 
-/*
+
 export async function getTournamentRanking(req: Request, res: Response) {
     try {
         const { tournamentId } = req.params;
-
-        // Validation du param avec JOI (bien que GET, on peut valider)
-        const { error } = tournamentRankingSchema.validate({ tournamentId: parseInt(tournamentId) });
-        if (error) {
-            res.status(400).json({
-                message: "ID de tournoi invalide",
-                details: error.details.map(detail => detail.message)
-            });
-            return;
-        }
 
         // Vérifier que le tournoi existe
         const tournament = await Tournament.findByPk(tournamentId);
@@ -212,13 +202,9 @@ export async function getTournamentRanking(req: Request, res: Response) {
             return;
         }
 
-        
         // Récupérer les équipes inscrites
-        const tournamentTeams = await TournamentTeams.findAll({
-            where: { tournamentId: parseInt(tournamentId) },
-            include: [Team],
-        });
-        
+        const tournamentTeams = await tournament.getTeams();
+
         // Récupérer les matchs joués
         const matches = await Match.findAll({
             where: { tournamentId: parseInt(tournamentId), playedAt: { [require('sequelize').Op.ne]: null } },
@@ -227,10 +213,10 @@ export async function getTournamentRanking(req: Request, res: Response) {
         // Calculer les stats pour chaque équipe
         const teamStats: { [key: number]: { team: Team, wins: number, draws: number, losses: number, points: number, goalsFor: number, goalsAgainst: number } } = {};
 
-        
-        tournamentTeams.forEach(tt => {
-            teamStats[tt.teamId] = {
-                team: (tt as any).Team,
+
+        tournamentTeams.forEach((team) => {
+            teamStats[team.id] = {
+                team,
                 wins: 0,
                 draws: 0,
                 losses: 0,
@@ -239,7 +225,7 @@ export async function getTournamentRanking(req: Request, res: Response) {
                 goalsAgainst: 0,
             };
         });
-        
+
         matches.forEach(match => {
             const teamA = teamStats[match.teamAId];
             const teamB = teamStats[match.teamBId];
@@ -286,7 +272,7 @@ export async function getTournamentRanking(req: Request, res: Response) {
             });
 
         res.status(200).json({
-            tournamentId,
+            tournamentId: Number(tournamentId),
             ranking,
         });
     } catch (err: any) {
@@ -294,4 +280,4 @@ export async function getTournamentRanking(req: Request, res: Response) {
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
     }
 }
-*/
+
