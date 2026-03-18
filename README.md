@@ -10,11 +10,15 @@ L'application est entièrement dockerisée dans une container stack comprenant 3
 
 Pour lancer le projet une série de scripts de raccrourcis ont été ajoutés à la racine du projet:
 
-
 ---
 Lancer le projet sans build (si déjà build):
 
 npm run dev
+---
+
+Si npm n'est pas installé, utiliser directment: 
+
+docker compose up --build
 ---
 
 Relancer le build et lancer le projet:
