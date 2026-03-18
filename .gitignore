@@ -75,10 +75,6 @@ typings/
 .nuxt
 dist
 
-# Gatsby files
-.cache/
-public
-
 # Storybook build outputs
 .out
 .storybook-out
@@ -88,7 +84,6 @@ tmp/
 temp/
 
 # Editor directories and files
-.vscode/
 .idea/
 *.swp
 *.swo

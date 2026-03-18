@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach Node Docker",
+            "type": "node",
+            "request": "attach",
+            "port": 9229,
+            "address": "localhost",
+            "localRoot": "${workspaceFolder}/backend",
+            "remoteRoot": "/app"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Debug Vue (Chrome)",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/frontend",
+        }
+    ]
+}
