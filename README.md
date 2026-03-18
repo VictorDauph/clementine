@@ -30,6 +30,8 @@ npm run stop
 ## Test automatisés
 
 Un test auto, intégré à un workflow github ci Fonctionnel a été ajouté sur le backend
+Les tests automatisés sont automatiquement lancés par github actions au push:
+https://github.com/VictorDauph/clementine/actions
 
 pour le lancer: 
 
