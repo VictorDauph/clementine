@@ -10,14 +10,16 @@ L'application est entièrement dockerisée dans une container stack comprenant 3
 
 Pour lancer le projet une série de scripts de raccrourcis ont été ajoutés à la racine du projet:
 
-Relancer le build et lancer le projet:
 
-npm run build 
 ---
-
 Lancer le projet sans build (si déjà build):
 
 npm run dev
+---
+
+Relancer le build et lancer le projet:
+
+npm run build 
 ---
 
 stopper le projet:
