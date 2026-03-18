@@ -7,6 +7,7 @@ import TournamentForm from "@/components/TournamentForm.vue";
 import { createTournamentService } from "@/services/tournament.service";
 import type { CreateTournamentPayload } from "@/models/Tournament";
 import TournamentCard from "@/components/TournamentCard.vue";
+import Header from "@/components/Header.vue";
 
 const tournaments = ref<Tournament[]>([]);
 const isLoading = ref(false);
@@ -65,10 +66,7 @@ async function loadTournaments(): Promise<void> {
 
 <template>
   <div class="page">
-    <header class="page-header">
-      <h1>Clementine Tournament Manager</h1>
-      <p class="subtitle">Organisez et gérez vos tournois simplement</p>
-    </header>
+    <Header />
 
     <main class="container">
 
@@ -105,22 +103,6 @@ async function loadTournaments(): Promise<void> {
   min-height: 100vh;
   background: #f8fafc;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-.page-header {
-  text-align: center;
-  padding: 3rem 1rem 2rem;
-}
-
-.page-header h1 {
-  font-size: 2rem;
-  margin: 0;
-  color: #0f172a;
-}
-
-.subtitle {
-  margin-top: 0.5rem;
-  color: #64748b;
 }
 
 .container {

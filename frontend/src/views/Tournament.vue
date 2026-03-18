@@ -10,7 +10,7 @@ import type { Match } from "@/models/Match";
 import { updateMatchScoreService } from "@/services/match.service";
 import ScoreForm from "@/components/ScoreForm.vue";
 import type { TournamentRankingResponseDto } from "@/dto/TournamentRankingResponse.dto";
-
+import Header from "@/components/Header.vue";
 
 const tournament = ref<Tournament | null>(null)
 const route = useRoute()
@@ -121,13 +121,7 @@ function fetchRanking() {
 
 <template>
   <div v-if="tournament != null" class="page">
-
-    <header class="page-header">
-      <h1>{{ tournament.name || "Tournoi" }}</h1>
-      <p class="subtitle">
-        {{ new Date(tournament.date).toLocaleDateString('fr-FR') || "Date à définir" }}
-      </p>
-    </header>
+    <Header />
 
     <main class="container">
 
@@ -271,21 +265,6 @@ function fetchRanking() {
 .page {
   min-height: 100vh;
   background: #f8fafc;
-}
-
-.page-header {
-  text-align: center;
-  padding: 3rem 1rem 2rem;
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: #0f172a;
-}
-
-.subtitle {
-  color: #64748b;
 }
 
 .container {
