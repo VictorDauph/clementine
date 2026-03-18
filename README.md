@@ -24,6 +24,11 @@ Si npm n'est pas installé, utiliser directment:
 docker compose up --build
 ---
 
+Le projet est accessible localement:
+
+http://localhost:5173/
+---
+
 Relancer le build et lancer le projet:
 
 npm run build 
