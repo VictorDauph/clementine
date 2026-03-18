@@ -6,6 +6,9 @@ Pour rester aligné avec le périmètre du test et le temps imparti, je n’ai p
 
 L'application est entièrement dockerisée dans une container stack comprenant 3 service: frontend, api et base de donnée.
 
+Une instance Docker lancée est nécessaire au lancement du projet.
+---
+
 ## Lancer le projet
 
 Pour lancer le projet une série de scripts de raccrourcis ont été ajoutés à la racine du projet:
